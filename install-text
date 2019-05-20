@@ -1,0 +1,2 @@
+npx create-react-app graphql-athentication-tdd
+npm install --save-dev enzyme enzyme-adapter-react-16 react-test-renderer
