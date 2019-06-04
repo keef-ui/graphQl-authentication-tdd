@@ -27,12 +27,18 @@ const resolvers = {
       status: () => 'GraphQL status: OK'
     },
     Mutation: {
-      createUser: (parent, { name,email,password}, { db }, info) =>
-      db.User.create({
-        name: name,
-        email:email,
-        password:password
-      })
+      createUser: (parent, { name,email,password}, { db }, info) => { 
+        //check for missing arguments
+        if (!name) throw new Error("Name not recieved");
+        if (!email) throw new Error("Email not recieved");
+        if (!password) throw new Error("Password not recieved");
+        return (
+              db.User.create({
+                name: name,
+                email:email,
+                password:password
+              }))
+       }
     }
 
   }
