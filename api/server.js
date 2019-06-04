@@ -9,14 +9,32 @@ const db = require('./sequelize')
 //  * * * * * * * * * * * * * * Start express server  * * * * * * * * * * * * * *
 
 const typeDefs = `
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    password: String!
+  }
   type Query {
     status: String 
   }
-  `
+  type Mutation {
+    createUser(name:String,email:String,password:String): User!
+  }
+  `;
 const resolvers = {
     Query: {
       status: () => 'GraphQL status: OK'
+    },
+    Mutation: {
+      createUser: (parent, { name,email,password}, { db }, info) =>
+      db.User.create({
+        name: name,
+        email:email,
+        password:password
+      })
     }
+
   }
 
 const server = new ApolloServer({
