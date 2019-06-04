@@ -28,10 +28,20 @@ const resolvers = {
     },
     Mutation: {
       createUser: (parent, { name,email,password}, { db }, info) => { 
+        const emailExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
         //check for missing arguments
         if (!name) throw new Error("Name not recieved");
         if (!email) throw new Error("Email not recieved");
         if (!password) throw new Error("Password not recieved");
+        // General validation
+        if(name.length > 15) throw new Error("Name should be less than 15 characters");
+        //Email and password check
+        const isValidEmail =  emailExpression.test(String(email).toLowerCase());
+        if(!isValidEmail) throw new Error("Email is not valid")
+        if(password.length < 8 ) throw new Error("Password should be minimum 8 characters")
+
         return (
               db.User.create({
                 name: name,
