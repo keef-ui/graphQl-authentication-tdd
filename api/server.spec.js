@@ -20,3 +20,16 @@ const port = 3001
             done();
         });
     })
+     describe('Register user testing', () => {
+        test('Should return status code 200 and confirmation for valid input when user details are provided', async (done) => {
+           let payLoad= `mutation {createUser(name:"John",email:"j.ohn@hotmail.com",password:"letmeib"){name}
+}`;
+
+            const response = await request(app).post('/graphql').send({query:payLoad});
+            expect(response.statusCode).toBe(200);
+            // expect(response.text).toBe( "{\"data\":{\"status\":\"OK\"}}");
+            let body=JSON.parse(response.text);
+            expect(body.data.createUser.name).toBe('John');
+            done();
+        });
+    })
