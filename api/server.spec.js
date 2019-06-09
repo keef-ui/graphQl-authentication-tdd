@@ -84,6 +84,23 @@ const port = 3001
             expect(body.errors[0].message).toBe('Password should be minimum 8 characters');
             done();
         });
+        test('Should throw error when username or email already exists', async (done) => {
+           
+            const payLoad= `mutation {createUser(name:"JohnDup",email:"j.ohn@hotmail.com",password:"letmeinnow"){name}}`;
+            const payLoadDuplicatEmail= `mutation {createUser(name:"anotherperson",email:"j.ohn@hotmail.com",password:"letmeinnow"){name}}`;
+            const payLoadDuplicatUser= `mutation {createUser(name:"JohnDup",email:"anotheremail@hotmail.com",password:"letmeinnow"){name}}`;
+            // await request(app).post('/graphql').send({query:payLoad});         
+            const response = await request(app).post('/graphql').send({query:payLoadDuplicatUser});
+             expect(response.statusCode).toBe(200);
+             const body=JSON.parse(response.text);
+             expect(body.errors[0].message).toBe('Name already exists');
+             const response2 = await request(app).post('/graphql').send({query:payLoadDuplicatEmail});
+             expect(response2.statusCode).toBe(200);
+             const body2=JSON.parse(response2.text);
+             expect(body2.errors[0].message).toBe('Email already exists');            
+             done();
+             //https://blog.pusher.com/handling-authentication-in-graphql-jwt/
+         });
 
 
     })
